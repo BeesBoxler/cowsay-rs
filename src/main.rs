@@ -1,4 +1,7 @@
+#![allow(unused)]
+
 mod bubble;
+mod cow_loader;
 mod mode;
 
 use bubble::{bubble, Style};
