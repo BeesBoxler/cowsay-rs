@@ -15,7 +15,7 @@ pub enum Style {
 impl Style {
     fn get_delimiters(&self, line: Line) -> (&'static str, &'static str) {
         match self {
-            Style::Think => ("( ", " )"),
+            Style::Think => (" (", ")"),
             Style::Say => match line {
                 Line::First => (" /", "\\"),
                 Line::Last => (" \\", "/"),
