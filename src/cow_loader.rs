@@ -43,7 +43,7 @@ pub fn load_cow(path: &str, mode: &Mode) -> Result<String, std::io::Error> {
         }
 
         if the_cow.is_match(&line) {
-            while let Some(cow_line) = lines.next() {
+            for cow_line in lines.by_ref() {
                 if eoc.is_match(cow_line) {
                     break;
                 }
