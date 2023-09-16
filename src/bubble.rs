@@ -26,7 +26,7 @@ impl Style {
     }
 }
 
-pub fn bubble(text: &str, style: Style) -> String {
+pub fn bubble(text: &str, style: &Style) -> String {
     let lines = split(text);
     let count = lines.len() - 1;
     let mut out = vec![];
