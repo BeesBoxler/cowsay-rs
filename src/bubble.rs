@@ -1,3 +1,5 @@
+use std::cmp::{max, min};
+
 const LINE_WIDTH: usize = 40;
 
 enum Line {
@@ -31,7 +33,7 @@ pub fn bubble(text: &str, style: &Style) -> String {
     let count = lines.len() - 1;
     let mut out = vec![];
 
-    out.push(top(std::cmp::min(LINE_WIDTH, text.len())));
+    out.push(top(min(LINE_WIDTH, text.len())));
     for (i, line) in lines.iter().enumerate() {
         let line_type = if text.len() > LINE_WIDTH {
             match i {
@@ -47,7 +49,7 @@ pub fn bubble(text: &str, style: &Style) -> String {
 
         out.push(format!("{} {} {}", pads.0, line, pads.1));
     }
-    out.push(bottom(std::cmp::min(LINE_WIDTH, text.len())));
+    out.push(bottom(min(LINE_WIDTH, text.len())));
 
     out.join("\r\n")
 }
@@ -61,16 +63,24 @@ fn bottom(length: usize) -> String {
 }
 
 fn split(text: &str) -> Vec<String> {
-    let mut result = if text.len() > LINE_WIDTH {
-        vec![]
-    } else {
-        vec![text.to_string()]
-    };
-    let mut cur = if text.len() > LINE_WIDTH { text } else { "" };
-    while !cur.is_empty() {
-        let (chunk, rest) = cur.split_at(std::cmp::min(LINE_WIDTH, cur.len()));
-        result.push(format!("{}{}", chunk, " ".repeat(LINE_WIDTH - chunk.len())));
-        cur = rest;
+    if text.is_empty() {
+        return vec![String::new()];
     }
+    let mut max_length = 0;
+    let mut result = vec![];
+    for line in text.lines() {
+        let mut cur = line;
+        while !cur.is_empty() {
+            let (chunk, rest) = cur.split_at(min(LINE_WIDTH, cur.len()));
+            max_length = max(max_length, chunk.len());
+            result.push(chunk);
+            cur = rest;
+        }
+    }
+
+    let result = result
+        .iter()
+        .map(|line| format!("{:max_length$}", line))
+        .collect();
     result
 }
