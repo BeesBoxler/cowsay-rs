@@ -1,5 +1,5 @@
-use std::cmp::{max, min};
 use regex::Replacer;
+use std::cmp::{max, min};
 
 enum Line {
     First,
@@ -33,7 +33,7 @@ pub fn bubble(text: &str, style: &Style, width: Option<usize>) -> String {
         None => usize::MAX,
     };
 
-    let (lines, max_width) = split(&text, max_width);
+    let (lines, max_width) = split(text, max_width);
     let count = lines.len() - 1;
     let mut out = vec![];
 
@@ -76,14 +76,14 @@ fn split(text: &str, max_width: usize) -> (Vec<String>, usize) {
     let mut result = vec![];
     let mut line = String::new();
 
-    while let Some(word) = words.next() {
+    for word in words {
         if line.len() + word.len() + 1 > max_width {
             max_length = max(max_length, line.len());
             result.push(line);
             line = String::new();
         }
 
-        line.push_str(" ");
+        line.push(' ');
         line.push_str(word);
     }
 
