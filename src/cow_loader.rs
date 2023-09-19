@@ -2,10 +2,10 @@ use regex::Regex;
 
 use crate::mode::Mode;
 
-const COMMENT: &str = r##"^\s*#+"##;
-const SUBSTITUTION: &str = r##"^\s*(\$\w+)\s*=\s*"(.+)";"##;
-const THE_COW: &str = r##"\s*\$the_cow\s*=\s*<<\s*"?EOC"?"##;
-const EOC: &str = r##"\s*EOC"##;
+const COMMENT: &str = r"^\s*#+";
+const SUBSTITUTION: &str = r#"^\s*(\$\w+)\s*=\s*"(.+)";"#;
+const THE_COW: &str = r#"\s*\$the_cow\s*=\s*<<\s*"?EOC"?"#;
+const EOC: &str = r"\s*EOC";
 
 pub fn load_cow(path: &str, mode: &Mode) -> Result<String, std::io::Error> {
     let comment = Regex::new(COMMENT).unwrap();
