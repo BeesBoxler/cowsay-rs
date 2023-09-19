@@ -1,7 +1,5 @@
 use std::cmp::{max, min};
 
-const LINE_WIDTH: usize = 40;
-
 enum Line {
     First,
     Last,
@@ -28,14 +26,19 @@ impl Style {
     }
 }
 
-pub fn bubble(text: &str, style: &Style) -> String {
-    let lines = split(text);
+pub fn bubble(text: &str, style: &Style, width: Option<usize>) -> String {
+    let max_width = match width {
+        Some(x) => x,
+        None => usize::MAX,
+    };
+
+    let lines = split(text, max_width);
     let count = lines.len() - 1;
     let mut out = vec![];
 
-    out.push(top(min(LINE_WIDTH, text.len())));
+    out.push(top(min(max_width, text.len())));
     for (i, line) in lines.iter().enumerate() {
-        let line_type = if text.len() > LINE_WIDTH {
+        let line_type = if text.len() > max_width {
             match i {
                 0 => Line::First,
                 x if { x == count } => Line::Last,
@@ -49,7 +52,7 @@ pub fn bubble(text: &str, style: &Style) -> String {
 
         out.push(format!("{} {} {}", pads.0, line, pads.1));
     }
-    out.push(bottom(min(LINE_WIDTH, text.len())));
+    out.push(bottom(min(max_width, text.len())));
 
     out.join("\r\n")
 }
@@ -62,7 +65,7 @@ fn bottom(length: usize) -> String {
     format!("  {}", "-".repeat(length + 2))
 }
 
-fn split(text: &str) -> Vec<String> {
+fn split(text: &str, max_width: usize) -> Vec<String> {
     if text.is_empty() {
         return vec![String::new()];
     }
@@ -71,7 +74,7 @@ fn split(text: &str) -> Vec<String> {
     for line in text.lines() {
         let mut cur = line;
         while !cur.is_empty() {
-            let (chunk, rest) = cur.split_at(min(LINE_WIDTH, cur.len()));
+            let (chunk, rest) = cur.split_at(min(max_width, cur.len()));
             max_length = max(max_length, chunk.len());
             result.push(chunk);
             cur = rest;
