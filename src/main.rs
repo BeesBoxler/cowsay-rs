@@ -22,7 +22,7 @@ impl Default for Options {
         Self {
             mode: Mode::Default,
             style: Style::Say,
-            cow: "cows/default.cow",
+            cow: "cows/spongebob.cow",
             input: None,
             width: Some(40),
         }
@@ -119,7 +119,7 @@ fn get_options_from_args() -> Options {
                             if !width.is_empty() {
                                 match width.iter().collect::<String>().parse::<usize>() {
                                     Ok(x) => options.width = Some(x),
-                                    Err(_) => options.width = Some(0),
+                                    Err(_) => options.width = Some(1),
                                 }
                             }
                         }

@@ -32,7 +32,9 @@ pub fn bubble(text: &str, style: &Style, width: Option<usize>) -> String {
         None => usize::MAX,
     };
 
-    let lines = split(text, max_width);
+    let text = text.replace('\t', "  ");
+
+    let (lines, max_width) = split(&text, max_width);
     let count = lines.len() - 1;
     let mut out = vec![];
 
@@ -65,10 +67,11 @@ fn bottom(length: usize) -> String {
     format!("  {}", "-".repeat(length + 2))
 }
 
-fn split(text: &str, max_width: usize) -> Vec<String> {
+fn split(text: &str, max_width: usize) -> (Vec<String>, usize) {
     if text.is_empty() {
-        return vec![String::new()];
+        return (vec![String::new()], 0);
     }
+
     let mut max_length = 0;
     let mut result = vec![];
     for line in text.lines() {
@@ -81,9 +84,11 @@ fn split(text: &str, max_width: usize) -> Vec<String> {
         }
     }
 
-    let result = result
-        .iter()
-        .map(|line| format!("{:max_length$}", line))
-        .collect();
-    result
+    (
+        result
+            .iter()
+            .map(|line| format!("{:<max_length$}", line))
+            .collect(),
+        max_length,
+    )
 }
