@@ -1,4 +1,5 @@
 use std::cmp::{max, min};
+use regex::Replacer;
 
 enum Line {
     First,
@@ -19,7 +20,7 @@ impl Style {
             Style::Say => match line {
                 Line::First => (" /", "\\"),
                 Line::Last => (" \\", "/"),
-                Line::Middle => ("| ", " |"),
+                Line::Middle => (" |", "|"),
                 Line::Only => (" <", ">"),
             },
         }
@@ -31,8 +32,6 @@ pub fn bubble(text: &str, style: &Style, width: Option<usize>) -> String {
         Some(x) => x,
         None => usize::MAX,
     };
-
-    let text = text.replace('\t', "  ");
 
     let (lines, max_width) = split(&text, max_width);
     let count = lines.len() - 1;
@@ -73,21 +72,27 @@ fn split(text: &str, max_width: usize) -> (Vec<String>, usize) {
     }
 
     let mut max_length = 0;
+    let mut words = text.split_whitespace();
     let mut result = vec![];
-    for line in text.lines() {
-        let mut cur = line;
-        while !cur.is_empty() {
-            let (chunk, rest) = cur.split_at(min(max_width, cur.len()));
-            max_length = max(max_length, chunk.len());
-            result.push(chunk);
-            cur = rest;
+    let mut line = String::new();
+
+    while let Some(word) = words.next() {
+        if line.len() + word.len() + 1 > max_width {
+            max_length = max(max_length, line.len());
+            result.push(line);
+            line = String::new();
         }
+
+        line.push_str(" ");
+        line.push_str(word);
     }
+
+    result.push(line);
 
     (
         result
             .iter()
-            .map(|line| format!("{:<max_length$}", line))
+            .map(|line| format!("{:<max_length$}", line.trim()))
             .collect(),
         max_length,
     )

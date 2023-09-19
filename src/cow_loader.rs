@@ -17,7 +17,11 @@ pub fn load_cow(path: &str, mode: &Mode) -> Result<String, std::io::Error> {
     let mut substitutions = vec![
         ("$thoughts".to_string(), "\\".to_string()),
         ("$eyes".to_string(), mode.get_eyes().to_string()),
+        ("${eyes}".to_string(), mode.get_eyes().to_string()),
         ("$tongue".to_string(), mode.get_mouth().to_string()),
+        ("${tongue}".to_string(), mode.get_mouth().to_string()),
+        ("\\\\".to_string(), "\\".to_string()),
+        ("\\@".to_string(), "@".to_string()),
     ];
 
     let input = std::fs::read_to_string(path)?;

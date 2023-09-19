@@ -22,7 +22,7 @@ impl Default for Options {
         Self {
             mode: Mode::Default,
             style: Style::Say,
-            cow: "cows/spongebob.cow",
+            cow: "cows/default.cow",
             input: None,
             width: Some(40),
         }
