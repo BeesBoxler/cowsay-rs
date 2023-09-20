@@ -72,22 +72,27 @@ fn split(text: &str, max_width: usize) -> (Vec<String>, usize) {
     }
 
     let mut max_length = 0;
-    let mut words = text.split_whitespace();
     let mut result = vec![];
     let mut line = String::new();
 
-    for word in words {
-        if line.len() + word.len() + 1 > max_width {
-            max_length = max(max_length, line.len());
-            result.push(line);
-            line = String::new();
+    for input_line in text.lines() {
+        let mut words = input_line.split_whitespace();
+        for word in words {
+            max_length = max(max_length, line.trim().len());
+            line.push(' ');
+            if line.len() + word.len() > max_width {
+                result.push(line);
+                line = String::new();
+            }
+
+            line.push_str(word);
         }
 
-        line.push(' ');
-        line.push_str(word);
+        max_length = max(max_length, line.trim().len());
+        result.push(line);
+        line = String::new();
     }
 
-    result.push(line);
 
     (
         result

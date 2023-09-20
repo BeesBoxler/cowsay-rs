@@ -24,7 +24,7 @@ impl Default for Options {
             style: Style::Say,
             cow: "cows/default.cow",
             input: None,
-            width: Some(40),
+            width: Some(43),
         }
     }
 }
