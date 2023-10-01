@@ -24,7 +24,7 @@ pub fn load_cow(path: &str, mode: &Mode) -> Result<String, std::io::Error> {
         ("\\@".to_string(), "@".to_string()),
     ];
 
-    let input = std::fs::read_to_string(path)?;
+    let input = std::fs::read_to_string(format!("cows/{}.cow", path))?;
     let mut lines = input.lines();
 
     while let Some(line) = lines.next() {

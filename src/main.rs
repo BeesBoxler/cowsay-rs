@@ -12,7 +12,7 @@ use std::io::Read;
 struct Options {
     mode: Mode,
     style: Style,
-    cow: &'static str,
+    cow: String,
     input: Option<String>,
     width: Option<usize>,
 }
@@ -22,7 +22,7 @@ impl Default for Options {
         Self {
             mode: Mode::Default,
             style: Style::Say,
-            cow: "cows/default.cow",
+            cow: "default".to_string(),
             input: None,
             width: Some(43),
         }
@@ -42,7 +42,7 @@ fn main() {
 
     println!("{}", bubble(input.trim(), &options.style, options.width));
 
-    let cow = load_cow(options.cow, &options.mode);
+    let cow = load_cow(&options.cow, &options.mode);
     println!("{}", cow.ok().unwrap());
 }
 
@@ -121,6 +121,24 @@ fn get_options_from_args() -> Options {
                                     Ok(x) => options.width = Some(x),
                                     Err(_) => options.width = Some(1),
                                 }
+                            }
+                        }
+                        'f' => {
+                            let mut cow_name = vec![];
+                            chars.next();
+                            'cow_name: while let Some(c) = chars.peek() {
+                                match c {
+                                    ' ' => {
+                                        if !cow_name.is_empty() {
+                                            break 'cow_name;
+                                        }
+                                    }
+                                    c => cow_name.push(*c),
+                                }
+                                chars.next();
+                            }
+                            if !cow_name.is_empty() {
+                                options.cow = cow_name.iter().collect::<String>();
                             }
                         }
                         'n' => options.width = None,
